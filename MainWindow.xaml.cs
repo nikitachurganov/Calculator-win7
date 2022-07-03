@@ -24,17 +24,23 @@ namespace WpfApp1
         public MainWindow()
         {
             num2 = false;
+        
             InitializeComponent();
+            
         }
+
         public double First_num;
         public double Second_num;
         public string sign;
+        public string del_zero = "";
         public bool num2;
         double result = 0;
         double Accumulator, Operand;
         double memory = 0;
+        
         private void digit_click(object sender, RoutedEventArgs e)
         {
+            
             if (num2)
             {
                 num2 = false;
@@ -45,10 +51,12 @@ namespace WpfApp1
                 if (Enter_field.Text == "0")
                 {
                     Enter_field.Text = (sender as Button).Content.ToString();
+                   
                 }
                 else
                 {
                     Enter_field.Text = Enter_field.Text + (sender as Button).Content.ToString();
+                    
                 }   
             }
         }
@@ -57,57 +65,60 @@ namespace WpfApp1
         {
             sign = (sender as Button).Content.ToString();
             First_num = double.Parse(Enter_field.Text);
-            
-            Operation_field.Text = First_num.ToString() + " " + sign;
+            Operation_field.Text = Enter_field.Text + " " + sign;
             num2 = true;
-           
         }
 
         private void equal_click(object sender, RoutedEventArgs e)
         {
-            
-            
-            
             Accumulator = First_num;
-            
             Operand = double.Parse(Enter_field.Text);
-            
-            
+
+
+
             if (sign == "+")
             {
-                result = Accumulator + Operand;
-                Operation_field.Text = result.ToString() + " " + "+";
+              result = Accumulator + Operand;
+                Enter_field.Text = result.ToString();
+                Operation_field.Text += result.ToString() + " " + "+";
+
             }
             if (sign == "-")
             {
                 result = Accumulator - Operand;
-                Operation_field.Text = result.ToString() + " " + "-";
+                Operation_field.Text += result.ToString() + " " + "-";
             }
             if (sign == "/")
             {
                 if (Operand == 0)
                 {
-                    Enter_field.Text = "Деление на ноль невозможно";
+                    //Enter_field.Text = "Деление на ноль невозможно";
+                    del_zero = "Деление на ноль невозможно";
                 }
-                else
+                else if (Operand != 0)
                 {
                     result = Accumulator / Operand;
-                    Operation_field.Text = result.ToString() + " " + "/";
+                    Operation_field.Text += result.ToString() + " " + "/";
                 }
             }
             if (sign == "*")
             {
                 result = Accumulator * Operand;
-                Operation_field.Text = result.ToString() + " " + "*";
+                Operation_field.Text += result.ToString() + " " + "*";
             }
 
             sign = "=";
-            
+            if (del_zero != "")
+            {
+                Enter_field.Text = del_zero;
+                del_zero = "";
+            }
+            else
                 Enter_field.Text = result.ToString();
-                Operation_field.Text = "";
+            Operation_field.Text = "";
                 
             
-            num2 = true;
+            num2 = false;
         }
 
         private void Clear_click(object sender, RoutedEventArgs e)
@@ -191,38 +202,49 @@ namespace WpfApp1
 
         private void MS_click(object sender, RoutedEventArgs e)
         {
-         
-                memory = double.Parse(Enter_field.Text);
-                num2 = true;
+            
+            memory = double.Parse(Enter_field.Text);
+            if (memory != 0)
+                enter.FontSize = 12;
+            num2 = true;
             
         }
 
         private void MR_click(object sender, RoutedEventArgs e)
         {
-                Enter_field.Text = memory.ToString();
-                num2 = true;
+            Enter_field.Text = memory.ToString();
+            if (memory != 0)
+                enter.FontSize = 12;
+            num2 = true;
         }
 
         private void MC_click(object sender, RoutedEventArgs e)
         {   
             memory = 0;
+            if (memory == 0)
+                enter.FontSize = 1;
             num2 = true;
         }
 
         private void mem_plus_click(object sender, RoutedEventArgs e)
         {
-            memory += double.Parse(Enter_field.Text);
+            if (memory!=0) {
+                memory += double.Parse(Enter_field.Text);
+                enter.FontSize = 12;
+            }
             num2 = true;
         }
 
         private void _click(object sender, RoutedEventArgs e)
         {
-
+ 
         }
 
         private void mem_minus_click(object sender, RoutedEventArgs e)
         {
-            memory -= double.Parse(Enter_field.Text);
+           memory = memory - double.Parse(Enter_field.Text);
+            if (memory == 0)
+                enter.FontSize = 1;
             num2 = true;
         }
 
@@ -234,7 +256,7 @@ namespace WpfApp1
 
             }
         }
-
+       
         private void hover__color(object sender, MouseEventArgs e)
         {
             
@@ -251,6 +273,67 @@ namespace WpfApp1
                 Accumulator = 0;
             }
 
+        }
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool shift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            if (shift == true && e.Key == Key.D8)
+            {
+                multiplication.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.Back:
+                    CE1_Copy.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D1:
+                    btn1.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D2:
+                    btn2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D3:
+                    btn3.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D4:
+                    btn4.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D5:
+                    btn5.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D6:
+                    btn6.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D7:
+                    btn7.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D8:
+                    btn8.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D9:
+                    btn9.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.D0:
+                    btn0.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.OemPlus:
+                    plus.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.OemMinus:
+                    minus.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.OemQuestion:
+                    del1.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.Multiply:
+                    multiplication.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+                case Key.Enter:
+                    equal.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    return;
+            }
         }
     }
 }
